@@ -239,10 +239,7 @@
       <a href="#e1"><span class="n">01</span> ดาวน์โหลดไฟล์</a>
       <a href="#e2"><span class="n">02</span> แตกไฟล์ ZIP</a>
       <a href="#e3"><span class="n">03</span> เปิดใน Jupyter Notebook</a>
-      <a href="#e4"><span class="n">04</span> อ่านและจัดการข้อมูล</a>
-      <a href="#e5"><span class="n">05</span> รวมตาราง (Merge)</a>
-      <a href="#e6"><span class="n">06</span> คำนวณคะแนนรวม</a>
-      <a href="#e7"><span class="n">07</span> การตัดเกรดและสถิติ</a>
+      <a href="#e4" onclick="window.location.href='exam_guide.html'; return false;"><span class="n">04</span> แนวข้อสอบและการเขียนโค้ด (เปิดหน้าใหม่)</a>
     </nav>
   </aside>
 
@@ -523,114 +520,7 @@ jupyter notebook</pre>
       </div>
     </div>
 
-    <div class="step" id="e4">
-      <div class="step-head"><span class="step-num exam">EXAM 04</span><h2>อ่านไฟล์ Excel และจัดการข้อมูลเบื้องต้น</h2></div>
-      <p>ใช้ <code>pandas</code> เพื่ออ่านไฟล์ Excel แบบดึงมาทุก Sheet (<code>sheet_name=None</code>) และจัดการข้อมูลเบื้องต้น เช่น ลบข้อมูลซ้ำ และจัดการค่าว่าง (Missing Values)</p>
-      <div class="nb-cell">
-        <div class="nb-in">
-          <div class="nb-tag">[1]:</div>
-          <div class="nb-code"><span class="kw">import</span> pandas <span class="kw">as</span> pd
-<span class="kw">import</span> numpy <span class="kw">as</span> np
 
-<span class="com"># อ่านข้อมูลทุก Sheet</span>
-reg_sheets = pd.read_excel(<span class="str">"RegistrationName.xlsx"</span>, sheet_name=<span class="kw">None</span>)
-score_sheets = pd.read_excel(<span class="str">"StudentScores.xlsx"</span>, sheet_name=<span class="kw">None</span>)
-
-<span class="com"># แยกแต่ละ Sheet ไว้ในตัวแปร</span>
-reg_df = reg_sheets[<span class="str">"NameList"</span>]
-hw_df = score_sheets[<span class="str">"Homework"</span>]
-quiz1_df = score_sheets[<span class="str">"Quiz1"</span>]
-quiz2_df = score_sheets[<span class="str">"Quiz2"</span>]
-mt_df = score_sheets[<span class="str">"MidtermExam"</span>]
-fn_df = score_sheets[<span class="str">"FinalExam"</span>]
-
-<span class="com"># ลบแถวซ้ำ (Duplicated Rows)</span>
-hw_df = hw_df.drop_duplicates()
-
-<span class="com"># เติมค่าว่างด้วย 0 (Fill NA)</span>
-hw_df.fillna(0, inplace=<span class="kw">True</span>)
-quiz1_df.fillna(0, inplace=<span class="kw">True</span>)
-
-<span class="com"># แปลงประเภทข้อมูลให้เป็นตัวเลข (ในกรณีที่มี text ปน)</span>
-hw_df[<span class="str">"HW4_10"</span>] = pd.to_numeric(hw_df[<span class="str">"HW4_10"</span>], errors=<span class="str">"coerce"</span>).fillna(0)
-quiz1_df[<span class="str">"Quiz1_10"</span>] = pd.to_numeric(quiz1_df[<span class="str">"Quiz1_10"</span>], errors=<span class="str">"coerce"</span>).fillna(0)</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="step" id="e5">
-      <div class="step-head"><span class="step-num exam">EXAM 05</span><h2>รวมตารางข้อมูล (Merge)</h2></div>
-      <p>รวมตารางคะแนนจากหลายๆ Sheet เข้าด้วยกันโดยใช้ <code>SID</code> (รหัสนักศึกษา) เป็นคีย์หลัก (Primary Key)</p>
-      <div class="nb-cell">
-        <div class="nb-in">
-          <div class="nb-tag">[2]:</div>
-          <div class="nb-code"><span class="com"># รวมข้อมูลทีละตาราง</span>
-merged = reg_df.merge(hw_df[[<span class="str">"SID"</span>,<span class="str">"HW1_10"</span>,<span class="str">"HW2_5"</span>,<span class="str">"HW3_15"</span>,<span class="str">"HW4_10"</span>]], on=<span class="str">"SID"</span>)
-merged = merged.merge(quiz1_df[[<span class="str">"SID"</span>,<span class="str">"Quiz1_10"</span>]], on=<span class="str">"SID"</span>)
-merged = merged.merge(quiz2_df[[<span class="str">"SID"</span>,<span class="str">"Quiz2_10"</span>]], on=<span class="str">"SID"</span>)
-merged = merged.merge(mt_df[[<span class="str">"SID"</span>,<span class="str">"MT_25"</span>]], on=<span class="str">"SID"</span>)
-merged = merged.merge(fn_df[[<span class="str">"SID"</span>,<span class="str">"FN_25"</span>]], on=<span class="str">"SID"</span>)
-
-<span class="com"># เลือกเฉพาะคอลัมน์ที่ต้องการใช้งาน</span>
-merged = merged[[<span class="str">"SID"</span>,<span class="str">"Name"</span>,<span class="str">"Email"</span>,<span class="str">"Section"</span>,<span class="str">"HW1_10"</span>,<span class="str">"HW2_5"</span>,<span class="str">"HW3_15"</span>,
-                  <span class="str">"HW4_10"</span>,<span class="str">"Quiz1_10"</span>,<span class="str">"Quiz2_10"</span>,<span class="str">"MT_25"</span>,<span class="str">"FN_25"</span>]]
-
-<span class="com"># ตั้ง SID เป็น Index</span>
-merged = merged.set_index(<span class="str">"SID"</span>)</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="step" id="e6">
-      <div class="step-head"><span class="step-num exam">EXAM 06</span><h2>คำนวณคะแนนรวมและจัดเรียง</h2></div>
-      <p>สร้างคอลัมน์ใหม่สำหรับคะแนนรวม และจัดเรียงข้อมูลตามคะแนนจากมากไปน้อยเพื่อหา Top Students</p>
-      <div class="nb-cell">
-        <div class="nb-in">
-          <div class="nb-tag">[3]:</div>
-          <div class="nb-code"><span class="com"># รวมคะแนนการบ้านและควิซ</span>
-merged[<span class="str">"Total HW"</span>] = merged[<span class="str">"HW1_10"</span>] + merged[<span class="str">"HW2_5"</span>] + merged[<span class="str">"HW3_15"</span>] + merged[<span class="str">"HW4_10"</span>]
-merged[<span class="str">"Total QZ"</span>] = merged[<span class="str">"Quiz1_10"</span>] + merged[<span class="str">"Quiz2_10"</span>]
-
-<span class="com"># คำนวณคะแนนรวมทั้งหมด</span>
-merged[<span class="str">"Total Scores"</span>] = merged[<span class="str">"Total HW"</span>] + merged[<span class="str">"Total QZ"</span>] + merged[<span class="str">"MT_25"</span>] + merged[<span class="str">"FN_25"</span>]
-
-<span class="com"># เรียงลำดับคะแนนรวมจากมากไปน้อย</span>
-merged = merged.sort_values(by=<span class="str">"Total Scores"</span>, ascending=<span class="kw">False</span>)
-
-<span class="com"># ตัวอย่าง: กรองเฉพาะคนที่ได้คะแนน >= 60 และหา 5 อันดับแรก</span>
-df_60up = merged.loc[merged[<span class="str">"Total Scores"</span>] >= 60]
-df_top5 = df_60up.iloc[0:5][[<span class="str">"Name"</span>, <span class="str">"Email"</span>, <span class="str">"Section"</span>, <span class="str">"Total Scores"</span>]]</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="step" id="e7">
-      <div class="step-head"><span class="step-num exam">EXAM 07</span><h2>การตัดเกรด (Grading) และสรุปข้อมูลสถิติ</h2></div>
-      <p>สร้างฟังก์ชันเพื่อคำนวณเกรด และใช้คำสั่ง <code>describe()</code> เพื่อดูค่าสถิติเบื้องต้น (Mean, Max, Min)</p>
-      <div class="nb-cell">
-        <div class="nb-in">
-          <div class="nb-tag">[4]:</div>
-          <div class="nb-code"><span class="com"># ฟังก์ชันตัดเกรด</span>
-<span class="kw">def</span> <span class="fn">grading</span>(score):
-    <span class="kw">if</span> score >= 80: <span class="kw">return</span> <span class="str">"A"</span>
-    <span class="kw">elif</span> score >= 70: <span class="kw">return</span> <span class="str">"B"</span>
-    <span class="kw">elif</span> score >= 60: <span class="kw">return</span> <span class="str">"C"</span>
-    <span class="kw">elif</span> score >= 50: <span class="kw">return</span> <span class="str">"D"</span>
-    <span class="kw">else</span>: <span class="kw">return</span> <span class="str">"F"</span>
-
-<span class="com"># นำฟังก์ชันมาใช้กับข้อมูล</span>
-grade_list = []
-<span class="kw">for</span> score <span class="kw">in</span> merged[<span class="str">"Total Scores"</span>]:
-    grade_list.append(grading(score))
-merged[<span class="str">"Grading"</span>] = grade_list
-
-<span class="com"># ดูข้อมูลสถิติเบื้องต้น (เช่น ค่าเฉลี่ย ส่วนเบี่ยงเบนมาตรฐาน ค่าสูงสุด ต่ำสุด)</span>
-stats = merged.describe()
-<span class="fn">print</span>(<span class="str">"Mean:"</span>, merged[<span class="str">"Total Scores"</span>].mean())
-<span class="fn">print</span>(<span class="str">"Max:"</span>, merged[<span class="str">"Total Scores"</span>].max())</div>
-        </div>
-      </div>
-    </div>
 
       <footer>
         ส่วนนี้สำหรับนักเรียนใช้ตอนวันสอบ แยกจากขั้นตอนติดตั้ง Jupyter ด้านบน

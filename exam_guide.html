@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>คู่มือเตรียมสอบ: ติว DC ด้วย Pandas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #12151a;
+    --bg-panel: #181c22;
+    --bg-code: #0d1013;
+    --ink: #e7e9ec;
+    --ink-dim: #8b93a1;
+    --line: #262b33;
+    --accent: #5aa9e6; /* Blue for Data focus */
+    --accent-dim: #1f4160;
+    --ok: #57c78a;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Sarabun','Space Grotesk',sans-serif;
+    line-height:1.7;
+  }
+  code, pre, .mono, .step-num, nav a span.n{
+    font-family:'IBM Plex Mono', monospace;
+  }
+  h1,h2,h3{
+    font-family:'Space Grotesk','Sarabun',sans-serif;
+    letter-spacing:-0.01em;
+  }
+
+  .shell{
+    display:grid;
+    grid-template-columns: 320px 1fr;
+    max-width:1300px;
+    margin:0 auto;
+  }
+  @media (max-width: 900px){
+    .shell{grid-template-columns: 1fr;}
+    .sidebar{position:static; height:auto; border-right:none; border-bottom:1px solid var(--line);}
+  }
+
+  .sidebar{
+    position:sticky; top:0; align-self:start;
+    height:100vh; overflow-y:auto;
+    border-right:1px solid var(--line);
+    padding:28px 20px;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:26px;
+  }
+  .brand-dot{
+    width:10px; height:10px; border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 12px var(--accent);
+  }
+  .brand-text{font-weight:700; font-size:15px;}
+  .brand-sub{font-size:12px; color:var(--ink-dim); font-family:'IBM Plex Mono',monospace;}
+
+  nav{display:flex; flex-direction:column; gap:2px;}
+  nav a{
+    display:flex; align-items:baseline; gap:10px;
+    padding:9px 10px; border-radius:8px;
+    color:var(--ink-dim); text-decoration:none; font-size:13.5px;
+    transition:background .15s, color .15s;
+  }
+  nav a span.n{color:var(--accent); font-size:12px; min-width:20px;}
+  nav a:hover{background:var(--bg-panel); color:var(--ink);}
+  
+  .nav-divider{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ok);
+    text-transform:uppercase; letter-spacing:.06em;
+    margin:22px 0 6px; padding:0 10px;
+  }
+
+  main{padding:56px 48px 100px;}
+  @media (max-width: 640px){ main{padding:36px 20px 80px;} }
+
+  .hero{margin-bottom:64px;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--accent);
+    border:1px solid var(--accent-dim); background:rgba(90, 169, 230, .08);
+    padding:5px 12px; border-radius:999px; margin-bottom:20px;
+  }
+  h1{
+    font-size:clamp(30px, 4.5vw, 46px);
+    line-height:1.15; margin:0 0 18px;
+  }
+  h1 .accent{color:var(--accent);}
+  .hero p.lead{
+    color:var(--ink-dim); font-size:16px; max-width:620px; margin:0 0 32px;
+  }
+
+  .step{
+    padding-top:52px; margin-top:52px;
+    border-top:1px solid var(--line);
+    scroll-margin-top:24px;
+  }
+  .step:first-of-type{border-top:none; margin-top:0;}
+  .step-head{display:flex; align-items:baseline; gap:16px; margin-bottom:14px;}
+  .step-num{
+    font-size:13px; color:var(--accent); font-weight:600;
+    border:1px solid var(--accent-dim); border-radius:7px;
+    padding:3px 9px; white-space:nowrap;
+  }
+  .step h2{font-size:22px; margin:0;}
+  .step p{color:var(--ink-dim); font-size:15px; max-width:680px;}
+  .step p strong{color:var(--ink);}
+
+  .note{
+    display:flex; gap:10px; align-items:flex-start;
+    background:rgba(90, 169, 230, .07); border:1px solid var(--accent-dim);
+    border-radius:10px; padding:14px 16px; margin:16px 0; font-size:14px; max-width:680px;
+  }
+  .note b{color:var(--accent);}
+
+  .explanation-box {
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 16px 0 32px;
+    max-width: 680px;
+    font-size: 14.5px;
+  }
+  .explanation-box ul {
+    margin: 0; padding-left: 20px;
+  }
+  .explanation-box li {
+    margin-bottom: 12px;
+  }
+  .explanation-box li:last-child {
+    margin-bottom: 0;
+  }
+  .explanation-box code {
+    background: rgba(255,255,255,0.1);
+    padding: 2px 5px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+
+  /* Notebook Cell Mockup */
+  .nb-cell{
+    max-width:680px; border:1px solid var(--line); border-radius:10px;
+    overflow:hidden; margin:14px 0 22px; background:#fff; color:#1a1a1a;
+  }
+  .nb-in{
+    display:grid; grid-template-columns:56px 1fr; border-bottom:1px solid #e7e7e7;
+  }
+  .nb-tag{
+    background:#f7f7f7; color:#3b82f6; font-family:'IBM Plex Mono',monospace;
+    font-size:12px; padding:14px 8px; text-align:right; border-right:3px solid #3b82f6;
+  }
+  .nb-code{padding:14px 16px; font-family:'IBM Plex Mono',monospace; font-size:13px; white-space:pre-wrap;}
+  .nb-code .bang{color:#c026d3;} .nb-code .kw{color:#0000ff;} .nb-code .fn{color:#795e26;} .nb-code .com{color:#008000;} .nb-code .str{color:#a31515;}
+  .nb-out{
+    padding:12px 16px 12px 72px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#57606a; background:#fff;
+    white-space:pre-wrap;
+  }
+
+  kbd{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; background:var(--bg-panel);
+    border:1px solid var(--line); border-bottom-width:2px; border-radius:5px; padding:2px 7px;
+    color: var(--ink);
+  }
+
+  a.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ink-dim);
+    text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 24px;
+    transition: color 0.15s;
+  }
+  a.back-link:hover {
+    color: var(--ink);
+  }
+
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-dot"></div>
+      <div>
+        <div class="brand-text">Pandas x Exam Guide</div>
+        <div class="brand-sub">Data Cleaning & Analysis</div>
+      </div>
+    </div>
+    <nav>
+      <a href="index.html" style="color:var(--ok);"><span class="n">←</span> กลับไปหน้าติดตั้ง</a>
+      <div class="nav-divider">สารบัญแนวข้อสอบ</div>
+      <a href="#t1"><span class="n">01</span> การอ่านไฟล์ Excel หลาย Sheet</a>
+      <a href="#t2"><span class="n">02</span> การสำรวจและลบข้อมูลซ้ำ</a>
+      <a href="#t3"><span class="n">03</span> การจัดการ Missing Value (NA)</a>
+      <a href="#t4"><span class="n">04</span> การรวมข้อมูล (Merge/Join)</a>
+      <a href="#t5"><span class="n">05</span> การสร้างคอลัมน์คำนวณคะแนนรวม</a>
+      <a href="#t6"><span class="n">06</span> การจัดเรียงและคัดกรองข้อมูล</a>
+      <a href="#t7"><span class="n">07</span> การสร้างฟังก์ชันตัดเกรด</a>
+      <a href="#t8"><span class="n">08</span> การหาค่าสถิติเบื้องต้น</a>
+    </nav>
+  </aside>
+
+  <main>
+    <a href="index.html" class="back-link">← กลับไปหน้าคู่มือการติดตั้ง Jupyter Notebook</a>
+    <section class="hero">
+      <span class="eyebrow">● PANDAS TUTORIAL</span>
+      <h1>คู่มือเตรียมสอบ<br><span class="accent">Data Cleaning & Analysis</span></h1>
+      <p class="lead">อธิบายเจาะลึกแบบบรรทัดต่อบรรทัดจากไฟล์ <code>ติวDC.ipynb</code> เพื่อให้เข้าใจหลักการวิเคราะห์ข้อมูล จัดการข้อมูลซ้ำ จัดการข้อมูลสูญหาย และการประมวลผลเกรดนักศึกษาอย่างเป็นขั้นตอน</p>
+    </section>
+
+    <!-- STEP 1 -->
+    <div class="step" id="t1">
+      <div class="step-head"><span class="step-num">01</span><h2>การอ่านไฟล์ Excel หลาย Sheet</h2></div>
+      <p>ในข้อสอบ ข้อมูลมักจะมาในรูปแบบไฟล์ Excel 1 ไฟล์แต่มีหลาย Sheet เราจะใช้ <code>pd.read_excel</code> ดึงข้อมูลออกมา</p>
+      
+      <div class="nb-cell">
+        <div class="nb-in">
+          <div class="nb-tag">[1]:</div>
+          <div class="nb-code"><span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+<span class="com"># อ่านข้อมูลจากไฟล์ Excel โดยดึงมาทุก Sheet ด้วย sheet_name=None</span>
+reg_sheets = pd.read_excel(<span class="str">"RegistrationName.xlsx"</span>, sheet_name=<span class="kw">None</span>)
+score_sheets = pd.read_excel(<span class="str">"StudentScores.xlsx"</span>, sheet_name=<span class="kw">None</span>)
+
+<span class="com"># แยกข้อมูลจากแต่ละ Sheet ออกมาเป็น DataFrame แต่ละตัว</span>
+reg_df = reg_sheets[<span class="str">"NameList"</span>]
+hw_df = score_sheets[<span class="str">"Homework"</span>]
+quiz1_df = score_sheets[<span class="str">"Quiz1"</span>]
+quiz2_df = score_sheets[<span class="str">"Quiz2"</span>]
+mt_df = score_sheets[<span class="str">"MidtermExam"</span>]
+fn_df = score_sheets[<span class="str">"FinalExam"</span>]</div>
+        </div>
+      </div>
+
+      <div class="explanation-box">
+        <strong>คำอธิบายโค้ด:</strong>
+        <ul>
+          <li><code>import pandas as pd</code>: นำเข้าไลบรารี Pandas และตั้งชื่อเล่นว่า <code>pd</code> เพื่อใช้ในการจัดการตารางข้อมูล</li>
+          <li><code>sheet_name=None</code>: เป็นคำสั่งสำคัญที่บอกให้ Pandas ดึงข้อมูล <b>ทุก Sheet</b> ในไฟล์นั้นขึ้นมา โดยเก็บอยู่ในรูปแบบ Dictionary (ชื่อ Sheet เป็น Key, ข้อมูลเป็น Value)</li>
+          <li><code>reg_sheets["NameList"]</code>: คือการดึงข้อมูลเฉพาะ Sheet ที่ชื่อว่า "NameList" ออกมาเก็บไว้ในตัวแปร <code>reg_df</code> เพื่อให้ง่ายต่อการใช้งานในขั้นตอนต่อไป</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step" id="t2">
+      <div class="step-head"><span class="step-num">02</span><h2>การสำรวจและลบข้อมูลซ้ำ (Duplicated Rows)</h2></div>
+      <p>ข้อมูลดิบมักจะมีข้อผิดพลาด เช่น มีการกรอกข้อมูลซ้ำ เราต้องเช็คและลบทิ้งก่อนวิเคราะห์</p>
+
+      <div class="nb-cell">
+        <div class="nb-in">
+          <div class="nb-tag">[2]:</div>
+          <div class="nb-code"><span class="fn">print</span>(<span class="str">"จำนวนแถวซ้ำ:"</span>, hw_df.duplicated().sum())
+
+<span class="com"># ลบข้อมูลที่ซ้ำกันออกไป</span>
+hw_df = hw_df.drop_duplicates()
+
+<span class="fn">print</span>(<span class="str">"จำนวนแถวหลังลบ:"</span>, <span class="fn">len</span>(hw_df))</div>
+        </div>
+      </div>
+
+      <div class="explanation-box">
+        <strong>คำอธิบายโค้ด:</strong>
+        <ul>
+          <li><code>hw_df.duplicated()</code>: จะตรวจสอบทุกแถวว่ามีแถวไหนที่ข้อมูลซ้ำกับแถวก่อนหน้าหรือไม่ จะคืนค่าเป็น True/False</li>
+          <li><code>.sum()</code>: นำมาใช้ต่อท้ายเพื่อหาว่ามีแถวซ้ำทั้งหมดกี่แถว (True มีค่าเป็น 1)</li>
+          <li><code>drop_duplicates()</code>: ทำการลบแถวที่มีข้อมูลซ้ำกันทุกประการออกไป (จะเก็บไว้เพียงแถวแรกสุดที่เจอเท่านั้น)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step" id="t3">
+      <div class="step-head"><span class="step-num">03</span><h2>การจัดการ Missing Value (NA) และแปลงชนิดข้อมูล</h2></div>
+      <p>ข้อมูลอาจจะมีช่องว่าง (NaN) หรือพิมพ์ข้อความแปลกๆ ลงในช่องคะแนน เช่น "-" หรือ "none" ซึ่งเราคำนวณไม่ได้</p>
+
+      <div class="nb-cell">
+        <div class="nb-in">
+          <div class="nb-tag">[3]:</div>
+          <div class="nb-code"><span class="com"># เช็คจำนวนค่าว่างในแต่ละคอลัมน์คิดเป็นเปอร์เซ็นต์</span>
+<span class="fn">print</span>(hw_df.isnull().sum() / <span class="fn">len</span>(hw_df) * 100)
+
+<span class="com"># เติมค่าว่างด้วย 0 ทั้งหมด</span>
+hw_df.fillna(0, inplace=<span class="kw">True</span>)
+quiz1_df.fillna(0, inplace=<span class="kw">True</span>)
+
+<span class="com"># แปลงชนิดข้อมูลให้เป็นตัวเลข กรณีที่มี text ปนมาในคอลัมน์คะแนน</span>
+hw_df[<span class="str">"HW4_10"</span>] = pd.to_numeric(hw_df[<span class="str">"HW4_10"</span>], errors=<span class="str">"coerce"</span>).fillna(0)
+quiz1_df[<span class="str">"Quiz1_10"</span>] = pd.to_numeric(quiz1_df[<span class="str">"Quiz1_10"</span>], errors=<span class="str">"coerce"</span>).fillna(0)</div>
+        </div>
+      </div>
+
+      <div class="explanation-box">
+        <strong>คำอธิบายโค้ด:</strong>
+        <ul>
+          <li><code>.isnull().sum()</code>: เช็คว่าแต่ละคอลัมน์มีค่าว่าง (NaN) กี่ตัว จากนั้นหารด้วยจำนวนแถวทั้งหมด (<code>len</code>) คูณ 100 เพื่อดูเป็นเปอร์เซ็นต์</li>
+          <li><code>fillna(0, inplace=True)</code>: แปลงช่องที่ว่าง (ไม่มีข้อมูล) ให้เป็นเลข 0 ทั้งหมด โดย <code>inplace=True</code> หมายถึงให้แก้ไขทับข้อมูลเดิมใน DataFrame ทันที</li>
+          <li><code>pd.to_numeric(..., errors="coerce")</code>: พยายามแปลงข้อมูลในคอลัมน์ให้เป็นตัวเลข (Float) แต่ถ้าแปลงไม่ได้ (เช่น พิมพ์มาว่า "ขาดสอบ" หรือ "-") ตัว <code>errors="coerce"</code> จะทำให้ค่านั้นกลายเป็น NaN แทน จากนั้นเราจึงใช้ <code>.fillna(0)</code> ต่อท้ายเพื่อเปลี่ยน NaN ให้เป็น 0</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step" id="t4">
+      <div class="step-head"><span class="step-num">04</span><h2>การรวมข้อมูล (Merge/Join)</h2></div>
+      <p>เมื่อเราทำความสะอาดข้อมูลแยกตาม Sheet เสร็จแล้ว เราจะต้องเอาทุก Sheet มารวมเป็นตารางเดียว เพื่อรวมคะแนน</p>
+
+      <div class="nb-cell">
+        <div class="nb-in">
+          <div class="nb-tag">[4]:</div>
+          <div class="nb-code"><span class="com"># รวมข้อมูลทีละตารางโดยใช้ SID เป็นจุดเชื่อม</span>
+merged = reg_df.merge(hw_df[[<span class="str">"SID"</span>,<span class="str">"HW1_10"</span>,<span class="str">"HW2_5"</span>,<span class="str">"HW3_15"</span>,<span class="str">"HW4_10"</span>]], on=<span class="str">"SID"</span>)
+merged = merged.merge(quiz1_df[[<span class="str">"SID"</span>,<span class="str">"Quiz1_10"</span>]], on=<span class="str">"SID"</span>)
+merged = merged.merge(quiz2_df[[<span class="str">"SID"</span>,<span class="str">"Quiz2_10"</span>]], on=<span class="str">"SID"</span>)
+merged = merged.merge(mt_df[[<span class="str">"SID"</span>,<span class="str">"MT_25"</span>]], on=<span class="str">"SID"</span>)
+merged = merged.merge(fn_df[[<span class="str">"SID"</span>,<span class="str">"FN_25"</span>]], on=<span class="str">"SID"</span>)
+
+<span class="com"># เลือกจัดเรียงเฉพาะคอลัมน์ที่เราจะใช้งาน</span>
+merged = merged[[<span class="str">"SID"</span>,<span class="str">"Name"</span>,<span class="str">"Email"</span>,<span class="str">"Section"</span>,<span class="str">"HW1_10"</span>,<span class="str">"HW2_5"</span>,<span class="str">"HW3_15"</span>,
+                  <span class="str">"HW4_10"</span>,<span class="str">"Quiz1_10"</span>,<span class="str">"Quiz2_10"</span>,<span class="str">"MT_25"</span>,<span class="str">"FN_25"</span>]]
+
+<span class="com"># ตั้งให้ SID เป็น Index (หัวแถว) ของตารางแทนที่เลข 0,1,2...</span>
+merged = merged.set_index(<span class="str">"SID"</span>)</div>
+        </div>
+      </div>
+
+      <div class="explanation-box">
+        <strong>คำอธิบายโค้ด:</strong>
+        <ul>
+          <li><code>.merge(ตารางขวา, on="SID")</code>: ทำการเชื่อมตารางซ้ายและขวาเข้าด้วยกัน โดยดูจากคอลัมน์ <code>SID</code> (รหัสนักศึกษา) ถ้ารหัสตรงกันก็จะนำข้อมูลมาต่อกันในแนวนอน</li>
+          <li><code>hw_df[["SID", "HW1_10", ...]]</code>: การใส่ List ซ้อนด้านใน <code>[[...]]</code> คือการ "เลือกเฉพาะบางคอลัมน์" จากตาราง เพื่อไม่ให้ตารางที่ได้จากการ merge มีคอลัมน์ขยะติดมาด้วย</li>
+          <li><code>set_index("SID")</code>: เปลี่ยนให้รหัสนักศึกษากลายเป็นตัวอ้างอิงของแต่ละแถว (Index) ซึ่งจะมีประโยชน์มากตอนเราดูข้อมูลเป็นรายบุคคล</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step" id="t5">
+      <div class="step-head"><span class="step-num">05</span><h2>การสร้างคอลัมน์คำนวณคะแนนรวม</h2></div>
+      <p>คณิตศาสตร์พื้นฐาน นำแต่ละคอลัมน์มาบวกกันเพื่อหาคะแนนเก็บและคะแนนรวมทั้งหมด</p>
+
+      <div class="nb-cell">
+        <div class="nb-in">
+          <div class="nb-tag">[5]:</div>
+          <div class="nb-code"><span class="com"># สร้างคอลัมน์ใหม่มารองรับผลบวก</span>
+merged[<span class="str">"Total HW"</span>] = merged[<span class="str">"HW1_10"</span>] + merged[<span class="str">"HW2_5"</span>] + merged[<span class="str">"HW3_15"</span>] + merged[<span class="str">"HW4_10"</span>]
+merged[<span class="str">"Total QZ"</span>] = merged[<span class="str">"Quiz1_10"</span>] + merged[<span class="str">"Quiz2_10"</span>]
+
+<span class="com"># คำนวณคะแนนรวมทั้งหมด</span>
+merged[<span class="str">"Total Scores"</span>] = merged[<span class="str">"Total HW"</span>] + merged[<span class="str">"Total QZ"</span>] + merged[<span class="str">"MT_25"</span>] + merged[<span class="str">"FN_25"</span>]</div>
+        </div>
+      </div>
+
+      <div class="explanation-box">
+        <strong>คำอธิบายโค้ด:</strong>
+        <ul>
+          <li><code>merged["ชื่อคอลัมน์ใหม่"] = ...</code>: ใน Pandas เราสามารถสร้างคอลัมน์ใหม่ได้ง่ายๆ ด้วยการกำหนดชื่อที่ไม่มีอยู่จริง และจับเท่ากับสมการที่เราต้องการ คล้ายกับการสร้างสูตรใน Excel ทั่วไป</li>
+          <li>เราสามารถนำ Series (คอลัมน์) มาบวกกันได้โดยตรง Pandas จะทำการบวกข้อมูลแถวต่อแถว (Row by Row) ให้อัตโนมัติ</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="step" id="t6">
+      <div class="step-head"><span class="step-num">06</span><h2>การจัดเรียงและคัดกรองข้อมูล</h2></div>
+      <p>เมื่อได้คะแนนรวมแล้ว เรามักจะต้องหาว่าใครได้คะแนนสูงสุด หรือกรองคนสอบผ่าน</p>
+
+      <div class="nb-cell">
+        <div class="nb-in">
+          <div class="nb-tag">[6]:</div>
+          <div class="nb-code"><span class="com"># จัดเรียงคะแนนรวมจากมากไปน้อย</span>
+merged = merged.sort_values(by=<span class="str">"Total Scores"</span>, ascending=<span class="kw">False</span>)
+
+<span class="com"># คัดกรองเอาเฉพาะคนที่ได้คะแนน >= 60 ขึ้นไป</span>
+df_60up = merged.loc[merged[<span class="str">"Total Scores"</span>] >= 60]
+
+<span class="com"># จัดเรียงอีกครั้งจากน้อยไปมาก</span>
+df_60up = df_60up.sort_values(by=<span class="str">"Total Scores"</span>)
+
+<span class="com"># เลือกข้อมูล 5 แถวแรก (Top 5)</span>
+df_top5 = df_60up.iloc[0:5][[<span class="str">"Name"</span>, <span class="str">"Email"</span>, <span class="str">"Section"</span>, <span class="str">"Total Scores"</span>]]</div>
+        </div>
+      </div>
+
+      <div class="explanation-box">
+        <strong>คำอธิบายโค้ด:</strong>
+        <ul>
+          <li><code>sort_values(by="...", ascending=False)</code>: เรียงลำดับตารางโดยดูจากคอลัมน์เป้าหมาย ค่า <code>ascending=False</code> หมายถึงเรียงจากมากไปน้อย (ค่า Default คือ True คือเรียงจากน้อยไปมาก)</li>
+          <li><code>merged.loc[...]</code>: ใช้ในการคัดกรอง (Filter) ข้อมูลตามเงื่อนไขที่กำหนด ในที่นี้คือ <code>merged["Total Scores"] >= 60</code></li>
+          <li><code>.iloc[0:5]</code>: เลือกข้อมูลตามลำดับแถวที่ปรากฏในตาราง (Index Location) โดย 0:5 หมายถึงเอาตั้งแต่แถวที่ 0 ไปจนถึงแถวที่ 4 (รวม 5 แถว)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- STEP 7 -->
+    <div class="step" id="t7">
+      <div class="step-head"><span class="step-num">07</span><h2>การสร้างฟังก์ชันตัดเกรด</h2></div>
+      <p>หากเรามีเงื่อนไขที่ซับซ้อน เช่น การให้เกรด A B C D F เราสามารถเขียนฟังก์ชันของ Python แล้วนำไปใช้งานกับ Pandas ได้</p>
+
+      <div class="nb-cell">
+        <div class="nb-in">
+          <div class="nb-tag">[7]:</div>
+          <div class="nb-code"><span class="com"># นิยามฟังก์ชันตัดเกรดตามเงื่อนไข</span>
+<span class="kw">def</span> <span class="fn">grading</span>(score):
+    <span class="kw">if</span> score >= 80: <span class="kw">return</span> <span class="str">"A"</span>
+    <span class="kw">elif</span> score >= 70: <span class="kw">return</span> <span class="str">"B"</span>
+    <span class="kw">elif</span> score >= 60: <span class="kw">return</span> <span class="str">"C"</span>
+    <span class="kw">elif</span> score >= 50: <span class="kw">return</span> <span class="str">"D"</span>
+    <span class="kw">else</span>: <span class="kw">return</span> <span class="str">"F"</span>
+
+<span class="com"># วนลูปส่งคะแนนทีละคนเข้าไปในฟังก์ชัน แล้วเก็บเกรดไว้ใน List</span>
+grade_list = []
+<span class="kw">for</span> score <span class="kw">in</span> merged[<span class="str">"Total Scores"</span>]:
+    grade_list.append(grading(score))
+
+<span class="com"># นำ List กลับไปสร้างเป็นคอลัมน์ใหม่ในตาราง</span>
+merged[<span class="str">"Grading"</span>] = grade_list</div>
+        </div>
+      </div>
+
+      <div class="explanation-box">
+        <strong>คำอธิบายโค้ด:</strong>
+        <ul>
+          <li><code>def grading(score):</code>: สร้างฟังก์ชันรับค่าคะแนนดิบ 1 ตัว และทำการเช็คเงื่อนไข <code>if-elif-else</code> เพื่อคืนค่าตัวอักษรเกรดกลับมา</li>
+          <li><code>for score in merged["Total Scores"]:</code>: เป็นการดึงคะแนนของนักศึกษาออกมาทีละคน เพื่อโยนเข้าไปให้ฟังก์ชันคำนวณ และนำผลที่ได้ใส่ในกล่อง <code>grade_list</code> ด้วยคำสั่ง <code>.append()</code></li>
+          <li>หลังจากวนลูปเสร็จ เราก็นำเอา <code>grade_list</code> ทั้งก้อน ยัดกลับเข้าไปเป็นคอลัมน์ใหม่ชื่อ <code>Grading</code> ในตารางหลัก</li>
+          <li><i>(เคล็ดลับ: ปกติเราสามารถใช้คำสั่ง <code>merged["Total Scores"].apply(grading)</code> ได้เลย ซึ่งสั้นและเร็วกว่าการใช้ for loop แต่ในคอร์สติวอาจจะสอนแบบ Loop เพื่อให้เห็นภาพการทำงานทีละขั้นตอนชัดเจน)</i></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- STEP 8 -->
+    <div class="step" id="t8">
+      <div class="step-head"><span class="step-num">08</span><h2>การหาค่าสถิติเบื้องต้น</h2></div>
+      <p>สรุปข้อมูลภาพรวมของห้องเรียน เช่น คะแนนเฉลี่ย หรือคะแนนสูงสุด</p>
+
+      <div class="nb-cell">
+        <div class="nb-in">
+          <div class="nb-tag">[8]:</div>
+          <div class="nb-code"><span class="com"># ดูสถิติทั้งหมดทุกคอลัมน์</span>
+stats = merged.describe()
+
+<span class="com"># ดึงเฉพาะค่าที่ต้องการมาปริ้น</span>
+<span class="fn">print</span>(<span class="str">"Mean:"</span>, merged[<span class="str">"Total Scores"</span>].mean())
+<span class="fn">print</span>(<span class="str">"Max:"</span>, merged[<span class="str">"Total Scores"</span>].max())
+<span class="fn">print</span>(<span class="str">"Min:"</span>, merged[<span class="str">"Total Scores"</span>].min())
+<span class="fn">print</span>(<span class="str">"Standard Deviation:"</span>, merged[<span class="str">"Total Scores"</span>].std())</div>
+        </div>
+      </div>
+
+      <div class="explanation-box">
+        <strong>คำอธิบายโค้ด:</strong>
+        <ul>
+          <li><code>.describe()</code>: เป็นฟังก์ชันสุดยอดของ Pandas ที่จะคำนวณสถิติพื้นฐาน (Count, Mean, Std, Min, Max, 25%, 50%, 75%) ของคอลัมน์ตัวเลขทุกคอลัมน์ในตารางให้โดยอัตโนมัติ</li>
+          <li>หากต้องการเรียกใช้ทีละค่าเฉพาะเจาะจง ก็สามารถเรียกผ่าน <code>.mean()</code> (ค่าเฉลี่ย), <code>.max()</code> (ค่ามากสุด), <code>.min()</code> (ค่าน้อยสุด), และ <code>.std()</code> (ส่วนเบี่ยงเบนมาตรฐาน) จากคอลัมน์นั้นๆ ได้เลย</li>
+        </ul>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>
