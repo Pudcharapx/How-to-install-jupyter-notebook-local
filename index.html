@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ติดตั้ง Jupyter Notebook ผ่าน PowerShell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #12151a;
+    --bg-panel: #181c22;
+    --bg-code: #0d1013;
+    --ink: #e7e9ec;
+    --ink-dim: #8b93a1;
+    --line: #262b33;
+    --accent: #f37626; /* Jupyter's own orange */
+    --accent-dim: #7a3d16;
+    --ok: #57c78a;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Sarabun','Space Grotesk',sans-serif;
+    line-height:1.7;
+  }
+  code, pre, .mono, .step-num, nav a span.n{
+    font-family:'IBM Plex Mono', monospace;
+  }
+  h1,h2,h3{
+    font-family:'Space Grotesk','Sarabun',sans-serif;
+    letter-spacing:-0.01em;
+  }
+
+  /* ---------- layout shell ---------- */
+  .shell{
+    display:grid;
+    grid-template-columns: 280px 1fr;
+    max-width:1200px;
+    margin:0 auto;
+  }
+  @media (max-width: 900px){
+    .shell{grid-template-columns: 1fr;}
+    .sidebar{position:static; height:auto; border-right:none; border-bottom:1px solid var(--line);}
+  }
+
+  /* ---------- sidebar ---------- */
+  .sidebar{
+    position:sticky; top:0; align-self:start;
+    height:100vh; overflow-y:auto;
+    border-right:1px solid var(--line);
+    padding:28px 20px;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:26px;
+  }
+  .brand-dot{
+    width:10px; height:10px; border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 12px var(--accent);
+  }
+  .brand-text{font-weight:700; font-size:15px;}
+  .brand-sub{font-size:12px; color:var(--ink-dim); font-family:'IBM Plex Mono',monospace;}
+
+  nav{display:flex; flex-direction:column; gap:2px;}
+  nav a{
+    display:flex; align-items:baseline; gap:10px;
+    padding:9px 10px; border-radius:8px;
+    color:var(--ink-dim); text-decoration:none; font-size:13.5px;
+    transition:background .15s, color .15s;
+  }
+  nav a span.n{color:var(--accent); font-size:12px; min-width:20px;}
+  nav a:hover{background:var(--bg-panel); color:var(--ink);}
+
+  /* ---------- main ---------- */
+  main{padding:56px 48px 100px;}
+  @media (max-width: 640px){ main{padding:36px 20px 80px;} }
+
+  .hero{margin-bottom:64px;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--accent);
+    border:1px solid var(--accent-dim); background:rgba(243,118,38,.08);
+    padding:5px 12px; border-radius:999px; margin-bottom:20px;
+  }
+  h1{
+    font-size:clamp(30px, 4.5vw, 46px);
+    line-height:1.15; margin:0 0 18px;
+  }
+  h1 .accent{color:var(--accent);}
+  .hero p.lead{
+    color:var(--ink-dim); font-size:16px; max-width:620px; margin:0 0 32px;
+  }
+
+  /* terminal mockup */
+  .term{
+    background:var(--bg-code);
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 20px 60px -25px rgba(0,0,0,.6);
+  }
+  .term-bar{
+    display:flex; align-items:center; gap:8px;
+    padding:12px 16px; background:var(--bg-panel);
+    border-bottom:1px solid var(--line);
+  }
+  .dot{width:11px; height:11px; border-radius:50%;}
+  .dot.r{background:#ff5f57;} .dot.y{background:#febc2e;} .dot.g{background:#28c840;}
+  .term-title{margin-left:8px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-dim);}
+  .term-body{padding:20px 22px; font-family:'IBM Plex Mono',monospace; font-size:13.5px;}
+  .term-body .l{margin:0 0 6px; white-space:pre-wrap; word-break:break-word;}
+  .term-body .prompt{color:var(--accent);}
+  .term-body .out{color:var(--ink-dim);}
+  .term-body .ok{color:var(--ok);}
+
+  /* ---------- steps ---------- */
+  .step{
+    padding-top:52px; margin-top:52px;
+    border-top:1px solid var(--line);
+    scroll-margin-top:24px;
+  }
+  .step:first-of-type{border-top:none; margin-top:0;}
+  .step-head{display:flex; align-items:baseline; gap:16px; margin-bottom:14px;}
+  .step-num{
+    font-size:13px; color:var(--accent); font-weight:600;
+    border:1px solid var(--accent-dim); border-radius:7px;
+    padding:3px 9px; white-space:nowrap;
+  }
+  .step h2{font-size:22px; margin:0;}
+  .step p{color:var(--ink-dim); font-size:15px; max-width:680px;}
+  .step p strong{color:var(--ink);}
+
+  .note{
+    display:flex; gap:10px; align-items:flex-start;
+    background:rgba(243,118,38,.07); border:1px solid var(--accent-dim);
+    border-radius:10px; padding:14px 16px; margin:16px 0; font-size:14px; max-width:680px;
+  }
+  .note b{color:var(--accent);}
+
+  /* code blocks */
+  .code{
+    position:relative;
+    background:var(--bg-code); border:1px solid var(--line);
+    border-radius:10px; margin:14px 0 22px; max-width:680px;
+  }
+  .code .head{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:8px 14px; border-bottom:1px solid var(--line);
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-dim);
+  }
+  .code pre{
+    margin:0; padding:16px; overflow-x:auto;
+    font-family:'IBM Plex Mono',monospace; font-size:13.5px; color:var(--ink);
+  }
+  .copy-btn{
+    background:transparent; border:1px solid var(--line); color:var(--ink-dim);
+    font-family:'IBM Plex Mono',monospace; font-size:11px;
+    padding:4px 10px; border-radius:6px; cursor:pointer;
+    transition:all .15s;
+  }
+  .copy-btn:hover{border-color:var(--accent); color:var(--accent);}
+  .copy-btn.copied{color:var(--ok); border-color:var(--ok);}
+
+  table{border-collapse:collapse; width:100%; max-width:680px; margin:14px 0 22px; font-size:14px;}
+  th,td{text-align:left; padding:10px 14px; border-bottom:1px solid var(--line);}
+  th{color:var(--accent); font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600;}
+  td.k{font-family:'IBM Plex Mono',monospace; color:var(--ink); white-space:nowrap;}
+  td.v{color:var(--ink-dim);}
+
+  kbd{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; background:var(--bg-panel);
+    border:1px solid var(--line); border-bottom-width:2px; border-radius:5px; padding:2px 7px;
+  }
+
+  ul.plain{padding-left:20px; color:var(--ink-dim); max-width:680px; font-size:15px;}
+  ul.plain li{margin-bottom:6px;}
+  ul.plain b{color:var(--ink);}
+
+  footer{
+    max-width:680px; padding-top:36px; margin-top:36px; border-top:1px solid var(--line);
+    color:var(--ink-dim); font-size:13px;
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-dot"></div>
+      <div>
+        <div class="brand-text">Jupyter x PowerShell</div>
+        <div class="brand-sub">local setup guide</div>
+      </div>
+    </div>
+    <nav>
+      <a href="#s1"><span class="n">01</span> เปิด PowerShell</a>
+      <a href="#s2"><span class="n">02</span> ตรวจสอบ Python</a>
+      <a href="#s3"><span class="n">03</span> อนุญาต Script</a>
+      <a href="#s4"><span class="n">04</span> สร้างโฟลเดอร์บน Desktop</a>
+      <a href="#s5"><span class="n">05</span> Virtual Environment</a>
+      <a href="#s6"><span class="n">06</span> ติดตั้ง Jupyter</a>
+      <a href="#s7"><span class="n">07</span> เปิดใช้งาน Notebook</a>
+      <a href="#s8"><span class="n">08</span> ใช้งานเบื้องต้น</a>
+      <a href="#s9"><span class="n">09</span> ปิด venv</a>
+      <a href="#s10"><span class="n">10</span> ใช้งานครั้งถัดไป</a>
+      <a href="#s11"><span class="n">11</span> ปัญหาที่พบบ่อย</a>
+      <a href="#s12"><span class="n">#</span> สรุปคำสั่ง</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+    <section class="hero">
+      <span class="eyebrow">● WINDOWS · POWERSHELL ONLY</span>
+      <h1>ติดตั้งและใช้งาน<br><span class="accent">Jupyter Notebook</span> แบบ Local</h1>
+      <p class="lead">คู่มือทีละขั้นตอนสำหรับรันทุกคำสั่งผ่าน PowerShell เพียงอย่างเดียว
+      ตั้งแต่เช็ค Python ไปจนถึงเปิด Notebook ใช้งานจริงบน <strong>Desktop</strong></p>
+
+      <div class="term">
+        <div class="term-bar">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span class="term-title">PowerShell — Desktop\jupyter-project</span>
+        </div>
+        <div class="term-body">
+          <p class="l"><span class="prompt">PS C:\Users\golf\Desktop\jupyter-project&gt;</span> jupyter notebook</p>
+          <p class="l out">[I] Serving notebooks from local directory: C:\Users\golf\Desktop\jupyter-project</p>
+          <p class="l out">[I] Jupyter Notebook 7.2.0 is running at:</p>
+          <p class="l ok">[I] http://localhost:8888/tree?token=a1b2c3...</p>
+          <p class="l out">[I] Use Control-C to stop this server.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 1 -->
+    <div class="step" id="s1">
+      <div class="step-head"><span class="step-num">STEP 01</span><h2>เปิด PowerShell</h2></div>
+      <ul class="plain">
+        <li>กด <kbd>Win</kbd> + <kbd>X</kbd> แล้วเลือก <b>Windows PowerShell</b> หรือ <b>Terminal</b></li>
+        <li>หรือกด <kbd>Win</kbd> พิมพ์ <b>powershell</b> แล้วกด <kbd>Enter</kbd></li>
+      </ul>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step" id="s2">
+      <div class="step-head"><span class="step-num">STEP 02</span><h2>ตรวจสอบว่ามี Python แล้วหรือยัง</h2></div>
+      <p>พิมพ์คำสั่งด้านล่างเพื่อเช็คเวอร์ชัน Python ที่ติดตั้งอยู่</p>
+      <div class="code">
+        <div class="head"><span>powershell</span><button class="copy-btn" onclick="copyCode(this)">คัดลอก</button></div>
+        <pre>python --version</pre>
+      </div>
+      <div class="note">
+        <span>⚠️</span>
+        <span><b>สำคัญ:</b> ถ้ายังไม่มี Python ให้โหลดจาก python.org แล้วต้องติ๊กช่อง
+        "Add python.exe to PATH" ตอนติดตั้ง มิฉะนั้น PowerShell จะเรียกใช้ไม่ได้</span>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step" id="s3">
+      <div class="step-head"><span class="step-num">STEP 03</span><h2>อนุญาตให้รัน Script (ทำครั้งเดียว)</h2></div>
+      <p>PowerShell จะบล็อกไฟล์ <b>activate.ps1</b> ที่ venv ต้องใช้ ต้องปลดล็อกก่อนหนึ่งครั้ง</p>
+      <div class="code">
+        <div class="head"><span>powershell</span><button class="copy-btn" onclick="copyCode(this)">คัดลอก</button></div>
+        <pre>Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser</pre>
+      </div>
+      <p>ถ้าระบบถาม ให้พิมพ์ <kbd>Y</kbd> แล้วกด <kbd>Enter</kbd></p>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step" id="s4">
+      <div class="step-head"><span class="step-num">STEP 04</span><h2>สร้างโฟลเดอร์โปรเจกต์บน Desktop</h2></div>
+      <div class="code">
+        <div class="head"><span>powershell</span><button class="copy-btn" onclick="copyCode(this)">คัดลอก</button></div>
+        <pre>cd Desktop
+mkdir jupyter-project
+cd jupyter-project</pre>
+      </div>
+      <p>โฟลเดอร์จะอยู่ที่ <code>C:\Users\ชื่อเรา\Desktop\jupyter-project</code></p>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step" id="s5">
+      <div class="step-head"><span class="step-num">STEP 05</span><h2>สร้างและเปิดใช้งาน Virtual Environment</h2></div>
+      <div class="code">
+        <div class="head"><span>powershell</span><button class="copy-btn" onclick="copyCode(this)">คัดลอก</button></div>
+        <pre>python -m venv venv
+.\venv\Scripts\Activate.ps1</pre>
+      </div>
+      <p>เมื่อ activate สำเร็จ จะเห็น <code>(venv)</code> ขึ้นด้านหน้า prompt</p>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="step" id="s6">
+      <div class="step-head"><span class="step-num">STEP 06</span><h2>ติดตั้ง Jupyter Notebook</h2></div>
+      <p>ขณะที่ <code>(venv)</code> ยัง active อยู่ ให้รัน:</p>
+      <div class="code">
+        <div class="head"><span>powershell</span><button class="copy-btn" onclick="copyCode(this)">คัดลอก</button></div>
+        <pre>pip install notebook</pre>
+      </div>
+      <p>อยากได้อินเทอร์เฟซรุ่นใหม่ (JupyterLab) ให้เพิ่ม:</p>
+      <div class="code">
+        <div class="head"><span>powershell</span><button class="copy-btn" onclick="copyCode(this)">คัดลอก</button></div>
+        <pre>pip install jupyterlab</pre>
+      </div>
+    </div>
+
+    <!-- STEP 7 -->
+    <div class="step" id="s7">
+      <div class="step-head"><span class="step-num">STEP 07</span><h2>เปิดใช้งาน Jupyter Notebook</h2></div>
+      <div class="code">
+        <div class="head"><span>powershell</span><button class="copy-btn" onclick="copyCode(this)">คัดลอก</button></div>
+        <pre>jupyter notebook</pre>
+      </div>
+      <p>ระบบจะแสดง URL เช่น <code>http://localhost:8888/tree?token=...</code> และเปิดเบราว์เซอร์อัตโนมัติ
+      ถ้าไม่เปิดเอง ให้คัดลอก URL ไปวางในเบราว์เซอร์เอง</p>
+      <div class="note"><span>🛑</span><span>ห้ามปิดหน้าต่าง PowerShell นี้ระหว่างใช้งาน — มันคือเซิร์ฟเวอร์ที่รันอยู่เบื้องหลัง</span></div>
+    </div>
+
+    <!-- STEP 8 -->
+    <div class="step" id="s8">
+      <div class="step-head"><span class="step-num">STEP 08</span><h2>การใช้งานเบื้องต้น</h2></div>
+      <p>สร้าง Notebook ใหม่: กด <b>New</b> มุมขวาบน → เลือก <b>Python 3</b> (ipykernel)</p>
+      <p>รันโค้ดใน cell ด้วย <kbd>Shift</kbd> + <kbd>Enter</kbd></p>
+      <table>
+        <tr><th>คีย์ลัด</th><th>หน้าที่</th></tr>
+        <tr><td class="k">Shift + Enter</td><td class="v">รัน cell แล้วไป cell ถัดไป</td></tr>
+        <tr><td class="k">A</td><td class="v">แทรก cell ด้านบน</td></tr>
+        <tr><td class="k">B</td><td class="v">แทรก cell ด้านล่าง</td></tr>
+        <tr><td class="k">D D</td><td class="v">ลบ cell (กด D สองครั้ง)</td></tr>
+        <tr><td class="k">M</td><td class="v">เปลี่ยนเป็น Markdown cell</td></tr>
+        <tr><td class="k">Y</td><td class="v">เปลี่ยนเป็น Code cell</td></tr>
+        <tr><td class="k">Ctrl + S</td><td class="v">บันทึกไฟล์</td></tr>
+      </table>
+      <p>ปิดเซิร์ฟเวอร์: กลับไปที่ PowerShell กด <kbd>Ctrl</kbd> + <kbd>C</kbd> แล้วพิมพ์ <kbd>y</kbd></p>
+    </div>
+
+    <!-- STEP 9 -->
+    <div class="step" id="s9">
+      <div class="step-head"><span class="step-num">STEP 09</span><h2>ปิด Virtual Environment เมื่อใช้เสร็จ</h2></div>
+      <div class="code">
+        <div class="head"><span>powershell</span><button class="copy-btn" onclick="copyCode(this)">คัดลอก</button></div>
+        <pre>deactivate</pre>
+      </div>
+    </div>
+
+    <!-- STEP 10 -->
+    <div class="step" id="s10">
+      <div class="step-head"><span class="step-num">STEP 10</span><h2>ครั้งถัดไปที่จะใช้งาน</h2></div>
+      <p>ไม่ต้องสร้าง venv ใหม่ แค่เปิด PowerShell แล้วรัน:</p>
+      <div class="code">
+        <div class="head"><span>powershell</span><button class="copy-btn" onclick="copyCode(this)">คัดลอก</button></div>
+        <pre>cd Desktop\jupyter-project
+.\venv\Scripts\Activate.ps1
+jupyter notebook</pre>
+      </div>
+    </div>
+
+    <!-- STEP 11 -->
+    <div class="step" id="s11">
+      <div class="step-head"><span class="step-num">STEP 11</span><h2>ปัญหาที่พบบ่อย</h2></div>
+      <table>
+        <tr><th>ปัญหา</th><th>วิธีแก้</th></tr>
+        <tr><td class="k">"running scripts is disabled"</td><td class="v">รันคำสั่งใน STEP 03 อีกครั้ง</td></tr>
+        <tr><td class="k">python ไม่รู้จัก</td><td class="v">ติดตั้ง Python ใหม่ + ติ๊ก Add to PATH</td></tr>
+        <tr><td class="k">jupyter ไม่รู้จัก</td><td class="v">เช็คว่า (venv) ขึ้นหน้า prompt หรือยัง</td></tr>
+        <tr><td class="k">พอร์ต 8888 ถูกใช้งาน</td><td class="v"><code>jupyter notebook --port 8889</code></td></tr>
+        <tr><td class="k">ติดตั้งไลบรารีเพิ่ม</td><td class="v"><code>pip install ชื่อไลบรารี</code></td></tr>
+      </table>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="step" id="s12">
+      <div class="step-head"><span class="step-num">QUICK REF</span><h2>สรุปคำสั่งทั้งหมด</h2></div>
+      <div class="code">
+        <div class="head"><span>powershell</span><button class="copy-btn" onclick="copyCode(this)">คัดลอกทั้งหมด</button></div>
+        <pre>Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+cd Desktop
+mkdir jupyter-project
+cd jupyter-project
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install notebook
+jupyter notebook
+deactivate</pre>
+      </div>
+
+      <footer>
+        คู่มือนี้ทดสอบบน Windows 10/11 · PowerShell 5.1+ · Python 3.9+
+      </footer>
+    </div>
+
+  </main>
+</div>
+
+<script>
+function copyCode(btn){
+  const pre = btn.closest('.code').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(()=>{
+    const original = btn.textContent;
+    btn.textContent = 'คัดลอกแล้ว ✓';
+    btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent = original; btn.classList.remove('copied'); }, 1500);
+  });
+}
+</script>
+
+</body>
+</html>
