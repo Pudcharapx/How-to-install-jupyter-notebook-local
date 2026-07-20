@@ -238,7 +238,7 @@
 
       <a href="#e1"><span class="n">01</span> ดาวน์โหลดไฟล์</a>
       <a href="#e2"><span class="n">02</span> แตกไฟล์ ZIP</a>
-      <a href="#e3"><span class="n">03</span> อัปโหลดเข้า Colab</a>
+      <a href="#e3"><span class="n">03</span> เปิดใน Jupyter Notebook</a>
     </nav>
   </aside>
 
@@ -473,7 +473,7 @@ deactivate</pre>
     <section class="hero" style="margin-top:96px; padding-top:56px; border-top:1px solid var(--line);">
       <span class="eyebrow" style="color:var(--accent2); border-color:var(--accent2-dim); background:rgba(90,169,230,.08);">● ส่วนที่ 2 · วันสอบ</span>
       <h1>รับไฟล์ข้อมูลสอบ<br><span style="color:var(--accent2);">แล้วเริ่มทำข้อสอบ</span></h1>
-      <p class="lead">ขั้นตอนสำหรับนักเรียน: ดาวน์โหลดไฟล์ ZIP ที่อาจารย์แจก แตกไฟล์ แล้วอัปโหลดเข้า Colab เพื่อเริ่มทำข้อสอบ</p>
+      <p class="lead">ขั้นตอนสำหรับนักเรียน: ดาวน์โหลดไฟล์ ZIP ที่อาจารย์แจก แตกไฟล์ แล้วเปิดใน Jupyter Notebook (เครื่องตัวเอง) เพื่อเริ่มทำข้อสอบ</p>
     </section>
 
     <div class="step" id="e1">
@@ -483,24 +483,50 @@ deactivate</pre>
     </div>
 
     <div class="step" id="e2">
-      <div class="step-head"><span class="step-num exam">EXAM 02</span><h2>แตกไฟล์ ZIP</h2></div>
+      <div class="step-head"><span class="step-num exam">EXAM 02</span><h2>แตกไฟล์ ZIP ไว้ในโฟลเดอร์โปรเจกต์</h2></div>
       <ul class="plain">
-        <li>คลิกขวาที่ไฟล์ <code>Exam_Data.zip</code> → เลือก <b>Extract All</b></li>
-        <li>หรือดับเบิลคลิกถ้าเครื่องมี 7-Zip / WinRAR ติดตั้งอยู่</li>
-        <li>จะได้ไฟล์ <code>RegistrationName.xlsx</code> และ <code>StudentScores.xlsx</code> แยกออกมา</li>
+        <li>ย้ายไฟล์ <code>Exam_Data.zip</code> ไปไว้ในโฟลเดอร์ <code>Desktop\jupyter-project</code> (โฟลเดอร์ที่สร้างไว้ตอนติดตั้ง Jupyter ด้านบน)</li>
+        <li>คลิกขวาที่ไฟล์ → เลือก <b>Extract All</b> (หรือดับเบิลคลิกถ้าเครื่องมี 7-Zip / WinRAR)</li>
+        <li>ยืนยันให้แตกไฟล์ลงในโฟลเดอร์เดียวกัน จะได้ <code>RegistrationName.xlsx</code> และ <code>StudentScores.xlsx</code> อยู่ข้างๆ ไฟล์ notebook</li>
       </ul>
+      <div class="note exam">
+        <span>💡</span>
+        <span>ต้องแตกไฟล์ไว้ <b>ในโฟลเดอร์เดียวกับ notebook</b> ไม่งั้นตอนอ่านไฟล์ด้วย <code>pd.read_excel()</code> จะหาไฟล์ไม่เจอ</span>
+      </div>
     </div>
 
     <div class="step" id="e3">
-      <div class="step-head"><span class="step-num exam">EXAM 03</span><h2>อัปโหลดเข้า Colab แล้วเริ่มทำข้อสอบ</h2></div>
+      <div class="step-head"><span class="step-num exam">EXAM 03</span><h2>เปิด Jupyter Notebook แล้วเริ่มทำข้อสอบ</h2></div>
+      <p>เปิด PowerShell แล้วรัน (ตามที่ตั้งค่าไว้ในส่วนที่ 1):</p>
+      <div class="code">
+        <div class="head"><span>powershell</span><button class="copy-btn" onclick="copyCode(this)">คัดลอก</button></div>
+        <pre>cd Desktop\jupyter-project
+.\venv\Scripts\Activate.ps1
+jupyter notebook</pre>
+      </div>
+      <p>เมื่อเบราว์เซอร์เปิดหน้า Jupyter ขึ้นมา จะเห็นไฟล์ <code>RegistrationName.xlsx</code>
+      และ <code>StudentScores.xlsx</code> อยู่ในรายการไฟล์ (มาจากที่แตก ZIP ไว้ในโฟลเดอร์เดียวกัน)</p>
+
       <ul class="plain">
-        <li>เปิด Google Colab แล้วกดปุ่ม 📁 <b>Files</b> ทางด้านซ้าย</li>
-        <li>กด <b>Upload</b> แล้วเลือกไฟล์ทั้งสองที่แตกไว้</li>
-        <li>เริ่มเขียนคำสั่งอ่านไฟล์และทำข้อสอบตามโจทย์ได้เลย</li>
+        <li>กด <b>New → Python 3 (ipykernel)</b> เพื่อสร้าง notebook ใหม่สำหรับทำข้อสอบ</li>
+        <li>ตั้งชื่อไฟล์ตามที่อาจารย์กำหนด (คลิกที่ชื่อ "Untitled" ด้านบนเพื่อเปลี่ยนชื่อ)</li>
+        <li>อ่านไฟล์ทั้งสองด้วย pandas ในเซลล์แรก แล้วเริ่มทำข้อสอบตามโจทย์ได้เลย</li>
       </ul>
+
+      <div class="nb-cell">
+        <div class="nb-in">
+          <div class="nb-tag">[1]:</div>
+          <div class="nb-code"><span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+reg = pd.<span class="fn">read_excel</span>(<span style="color:#a31515;">"RegistrationName.xlsx"</span>, sheet_name=<span class="kw">None</span>)
+scores = pd.<span class="fn">read_excel</span>(<span style="color:#a31515;">"StudentScores.xlsx"</span>, sheet_name=<span class="kw">None</span>)</div>
+        </div>
+      </div>
+
       <div class="note exam">
         <span>📌</span>
-        <span><b>อย่าลืมย้ำ:</b> คำตอบทุกข้อต้องพร้อมเลขข้อกำกับในไฟล์ Colab และต้องแชร์ไฟล์ Colab ให้อาจารย์ด้วย</span>
+        <span><b>อย่าลืมย้ำ:</b> คำตอบทุกข้อต้องพร้อมเลขข้อกำกับในไฟล์ และหมั่นกด <kbd>Ctrl</kbd> + <kbd>S</kbd>
+        บันทึกไฟล์ระหว่างทำข้อสอบเป็นระยะ เพราะ Jupyter local ไม่ได้บันทึกอัตโนมัติขึ้นคลาวด์เหมือน Colab</span>
       </div>
 
       <footer>
