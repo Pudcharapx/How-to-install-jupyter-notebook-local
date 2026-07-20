@@ -35,7 +35,6 @@
     letter-spacing:-0.01em;
   }
 
-  /* ---------- layout shell ---------- */
   .shell{
     display:grid;
     grid-template-columns: 280px 1fr;
@@ -47,7 +46,6 @@
     .sidebar{position:static; height:auto; border-right:none; border-bottom:1px solid var(--line);}
   }
 
-  /* ---------- sidebar ---------- */
   .sidebar{
     position:sticky; top:0; align-self:start;
     height:100vh; overflow-y:auto;
@@ -76,7 +74,6 @@
   nav a span.n{color:var(--accent); font-size:12px; min-width:20px;}
   nav a:hover{background:var(--bg-panel); color:var(--ink);}
 
-  /* ---------- main ---------- */
   main{padding:56px 48px 100px;}
   @media (max-width: 640px){ main{padding:36px 20px 80px;} }
 
@@ -96,7 +93,6 @@
     color:var(--ink-dim); font-size:16px; max-width:620px; margin:0 0 32px;
   }
 
-  /* terminal mockup */
   .term{
     background:var(--bg-code);
     border:1px solid var(--line);
@@ -118,7 +114,6 @@
   .term-body .out{color:var(--ink-dim);}
   .term-body .ok{color:var(--ok);}
 
-  /* ---------- steps ---------- */
   .step{
     padding-top:52px; margin-top:52px;
     border-top:1px solid var(--line);
@@ -142,7 +137,6 @@
   }
   .note b{color:var(--accent);}
 
-  /* code blocks */
   .code{
     position:relative;
     background:var(--bg-code); border:1px solid var(--line);
@@ -165,6 +159,24 @@
   }
   .copy-btn:hover{border-color:var(--accent); color:var(--accent);}
   .copy-btn.copied{color:var(--ok); border-color:var(--ok);}
+
+  /* notebook cell mockup for the in-notebook install example */
+  .nb-cell{
+    max-width:680px; border:1px solid var(--line); border-radius:10px;
+    overflow:hidden; margin:14px 0 22px; background:#fff; color:#1a1a1a;
+  }
+  .nb-in{
+    display:grid; grid-template-columns:56px 1fr; border-bottom:1px solid #e7e7e7;
+  }
+  .nb-tag{
+    background:#f7f7f7; color:#3b82f6; font-family:'IBM Plex Mono',monospace;
+    font-size:12px; padding:14px 8px; text-align:right; border-right:3px solid #3b82f6;
+  }
+  .nb-code{padding:14px 16px; font-family:'IBM Plex Mono',monospace; font-size:13px; white-space:pre-wrap;}
+  .nb-code .bang{color:#c026d3;} .nb-code .kw{color:#0000ff;} .nb-code .fn{color:#795e26;}
+  .nb-out{
+    padding:12px 16px 12px 72px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#57606a; background:#fff;
+  }
 
   table{border-collapse:collapse; width:100%; max-width:680px; margin:14px 0 22px; font-size:14px;}
   th,td{text-align:left; padding:10px 14px; border-bottom:1px solid var(--line);}
@@ -190,7 +202,6 @@
 <body>
 
 <div class="shell">
-  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-dot"></div>
@@ -206,16 +217,16 @@
       <a href="#s4"><span class="n">04</span> สร้างโฟลเดอร์บน Desktop</a>
       <a href="#s5"><span class="n">05</span> Virtual Environment</a>
       <a href="#s6"><span class="n">06</span> ติดตั้ง Jupyter</a>
-      <a href="#s7"><span class="n">07</span> เปิดใช้งาน Notebook</a>
-      <a href="#s8"><span class="n">08</span> ใช้งานเบื้องต้น</a>
-      <a href="#s9"><span class="n">09</span> ปิด venv</a>
-      <a href="#s10"><span class="n">10</span> ใช้งานครั้งถัดไป</a>
-      <a href="#s11"><span class="n">11</span> ปัญหาที่พบบ่อย</a>
-      <a href="#s12"><span class="n">#</span> สรุปคำสั่ง</a>
+      <a href="#s7"><span class="n">07</span> ติดตั้งไลบรารีเพิ่มเติม</a>
+      <a href="#s8"><span class="n">08</span> เปิดใช้งาน Notebook</a>
+      <a href="#s9"><span class="n">09</span> ใช้งานเบื้องต้น</a>
+      <a href="#s10"><span class="n">10</span> ปิด venv</a>
+      <a href="#s11"><span class="n">11</span> ใช้งานครั้งถัดไป</a>
+      <a href="#s12"><span class="n">12</span> ปัญหาที่พบบ่อย</a>
+      <a href="#s13"><span class="n">#</span> สรุปคำสั่ง</a>
     </nav>
   </aside>
 
-  <!-- MAIN -->
   <main>
     <section class="hero">
       <span class="eyebrow">● WINDOWS · POWERSHELL ONLY</span>
@@ -238,7 +249,6 @@
       </div>
     </section>
 
-    <!-- STEP 1 -->
     <div class="step" id="s1">
       <div class="step-head"><span class="step-num">STEP 01</span><h2>เปิด PowerShell</h2></div>
       <ul class="plain">
@@ -247,7 +257,6 @@
       </ul>
     </div>
 
-    <!-- STEP 2 -->
     <div class="step" id="s2">
       <div class="step-head"><span class="step-num">STEP 02</span><h2>ตรวจสอบว่ามี Python แล้วหรือยัง</h2></div>
       <p>พิมพ์คำสั่งด้านล่างเพื่อเช็คเวอร์ชัน Python ที่ติดตั้งอยู่</p>
@@ -262,7 +271,6 @@
       </div>
     </div>
 
-    <!-- STEP 3 -->
     <div class="step" id="s3">
       <div class="step-head"><span class="step-num">STEP 03</span><h2>อนุญาตให้รัน Script (ทำครั้งเดียว)</h2></div>
       <p>PowerShell จะบล็อกไฟล์ <b>activate.ps1</b> ที่ venv ต้องใช้ ต้องปลดล็อกก่อนหนึ่งครั้ง</p>
@@ -273,7 +281,6 @@
       <p>ถ้าระบบถาม ให้พิมพ์ <kbd>Y</kbd> แล้วกด <kbd>Enter</kbd></p>
     </div>
 
-    <!-- STEP 4 -->
     <div class="step" id="s4">
       <div class="step-head"><span class="step-num">STEP 04</span><h2>สร้างโฟลเดอร์โปรเจกต์บน Desktop</h2></div>
       <div class="code">
@@ -285,7 +292,6 @@ cd jupyter-project</pre>
       <p>โฟลเดอร์จะอยู่ที่ <code>C:\Users\ชื่อเรา\Desktop\jupyter-project</code></p>
     </div>
 
-    <!-- STEP 5 -->
     <div class="step" id="s5">
       <div class="step-head"><span class="step-num">STEP 05</span><h2>สร้างและเปิดใช้งาน Virtual Environment</h2></div>
       <div class="code">
@@ -296,7 +302,6 @@ cd jupyter-project</pre>
       <p>เมื่อ activate สำเร็จ จะเห็น <code>(venv)</code> ขึ้นด้านหน้า prompt</p>
     </div>
 
-    <!-- STEP 6 -->
     <div class="step" id="s6">
       <div class="step-head"><span class="step-num">STEP 06</span><h2>ติดตั้ง Jupyter Notebook</h2></div>
       <p>ขณะที่ <code>(venv)</code> ยัง active อยู่ ให้รัน:</p>
@@ -311,9 +316,39 @@ cd jupyter-project</pre>
       </div>
     </div>
 
-    <!-- STEP 7 -->
+    <!-- NEW STEP: install common libraries -->
     <div class="step" id="s7">
-      <div class="step-head"><span class="step-num">STEP 07</span><h2>เปิดใช้งาน Jupyter Notebook</h2></div>
+      <div class="step-head"><span class="step-num">STEP 07</span><h2>ติดตั้งไลบรารีที่ใช้บ่อย</h2></div>
+      <p>ก่อนเริ่มเขียนโค้ดวิเคราะห์ข้อมูล ให้ติดตั้งไลบรารีพื้นฐานอย่าง
+      <b>numpy</b>, <b>pandas</b>, <b>matplotlib</b> และ <b>ipykernel</b> ไว้ล่วงหน้า
+      ทำได้ 2 วิธี:</p>
+
+      <p><strong>วิธีที่ 1 — ติดตั้งจาก PowerShell</strong> (ก่อนเปิด notebook ขึ้นมา)</p>
+      <div class="code">
+        <div class="head"><span>powershell</span><button class="copy-btn" onclick="copyCode(this)">คัดลอก</button></div>
+        <pre>pip install numpy matplotlib pandas ipykernel</pre>
+      </div>
+
+      <p><strong>วิธีที่ 2 — ติดตั้งจากภายใน Notebook</strong> โดยรันคำสั่งในเซลล์แรก
+      (เครื่องหมาย <code>!</code> ด้านหน้า คือการสั่งรันคำสั่ง shell จากใน notebook)</p>
+
+      <div class="nb-cell">
+        <div class="nb-in">
+          <div class="nb-tag">[2]:</div>
+          <div class="nb-code"><span class="bang">!</span> pip install numpy matplotlib pandas ipykernel</div>
+        </div>
+        <div class="nb-out">Requirement already satisfied: numpy in c:\users\...\site-packages (2.3.5) ●●●</div>
+      </div>
+
+      <div class="note">
+        <span>💡</span>
+        <span>ถ้าขึ้นข้อความ <b>"Requirement already satisfied"</b> แปลว่ามีไลบรารีนั้นติดตั้งอยู่แล้ว
+        ไม่ต้องทำอะไรเพิ่ม สามารถ import ไปใช้งานได้เลย</span>
+      </div>
+    </div>
+
+    <div class="step" id="s8">
+      <div class="step-head"><span class="step-num">STEP 08</span><h2>เปิดใช้งาน Jupyter Notebook</h2></div>
       <div class="code">
         <div class="head"><span>powershell</span><button class="copy-btn" onclick="copyCode(this)">คัดลอก</button></div>
         <pre>jupyter notebook</pre>
@@ -323,10 +358,35 @@ cd jupyter-project</pre>
       <div class="note"><span>🛑</span><span>ห้ามปิดหน้าต่าง PowerShell นี้ระหว่างใช้งาน — มันคือเซิร์ฟเวอร์ที่รันอยู่เบื้องหลัง</span></div>
     </div>
 
-    <!-- STEP 8 -->
-    <div class="step" id="s8">
-      <div class="step-head"><span class="step-num">STEP 08</span><h2>การใช้งานเบื้องต้น</h2></div>
+    <div class="step" id="s9">
+      <div class="step-head"><span class="step-num">STEP 09</span><h2>การใช้งานเบื้องต้น</h2></div>
       <p>สร้าง Notebook ใหม่: กด <b>New</b> มุมขวาบน → เลือก <b>Python 3</b> (ipykernel)</p>
+      <p>ทดลอง import ไลบรารีที่ติดตั้งไว้ และสร้างตารางข้อมูลง่ายๆ ด้วย pandas:</p>
+
+      <div class="nb-cell">
+        <div class="nb-in">
+          <div class="nb-tag">[3]:</div>
+          <div class="nb-code"><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> matplotlib</div>
+        </div>
+      </div>
+
+      <div class="nb-cell">
+        <div class="nb-in">
+          <div class="nb-tag">[6]:</div>
+          <div class="nb-code">x = ["1", "2", "3"]
+x = pd.<span class="fn">DataFrame</span>(x)
+x</div>
+        </div>
+        <div class="nb-out">
+&nbsp;&nbsp;&nbsp;0<br>
+0&nbsp;&nbsp;1<br>
+1&nbsp;&nbsp;2<br>
+2&nbsp;&nbsp;3
+        </div>
+      </div>
+
       <p>รันโค้ดใน cell ด้วย <kbd>Shift</kbd> + <kbd>Enter</kbd></p>
       <table>
         <tr><th>คีย์ลัด</th><th>หน้าที่</th></tr>
@@ -341,18 +401,16 @@ cd jupyter-project</pre>
       <p>ปิดเซิร์ฟเวอร์: กลับไปที่ PowerShell กด <kbd>Ctrl</kbd> + <kbd>C</kbd> แล้วพิมพ์ <kbd>y</kbd></p>
     </div>
 
-    <!-- STEP 9 -->
-    <div class="step" id="s9">
-      <div class="step-head"><span class="step-num">STEP 09</span><h2>ปิด Virtual Environment เมื่อใช้เสร็จ</h2></div>
+    <div class="step" id="s10">
+      <div class="step-head"><span class="step-num">STEP 10</span><h2>ปิด Virtual Environment เมื่อใช้เสร็จ</h2></div>
       <div class="code">
         <div class="head"><span>powershell</span><button class="copy-btn" onclick="copyCode(this)">คัดลอก</button></div>
         <pre>deactivate</pre>
       </div>
     </div>
 
-    <!-- STEP 10 -->
-    <div class="step" id="s10">
-      <div class="step-head"><span class="step-num">STEP 10</span><h2>ครั้งถัดไปที่จะใช้งาน</h2></div>
+    <div class="step" id="s11">
+      <div class="step-head"><span class="step-num">STEP 11</span><h2>ครั้งถัดไปที่จะใช้งาน</h2></div>
       <p>ไม่ต้องสร้าง venv ใหม่ แค่เปิด PowerShell แล้วรัน:</p>
       <div class="code">
         <div class="head"><span>powershell</span><button class="copy-btn" onclick="copyCode(this)">คัดลอก</button></div>
@@ -362,21 +420,20 @@ jupyter notebook</pre>
       </div>
     </div>
 
-    <!-- STEP 11 -->
-    <div class="step" id="s11">
-      <div class="step-head"><span class="step-num">STEP 11</span><h2>ปัญหาที่พบบ่อย</h2></div>
+    <div class="step" id="s12">
+      <div class="step-head"><span class="step-num">STEP 12</span><h2>ปัญหาที่พบบ่อย</h2></div>
       <table>
         <tr><th>ปัญหา</th><th>วิธีแก้</th></tr>
         <tr><td class="k">"running scripts is disabled"</td><td class="v">รันคำสั่งใน STEP 03 อีกครั้ง</td></tr>
         <tr><td class="k">python ไม่รู้จัก</td><td class="v">ติดตั้ง Python ใหม่ + ติ๊ก Add to PATH</td></tr>
         <tr><td class="k">jupyter ไม่รู้จัก</td><td class="v">เช็คว่า (venv) ขึ้นหน้า prompt หรือยัง</td></tr>
         <tr><td class="k">พอร์ต 8888 ถูกใช้งาน</td><td class="v"><code>jupyter notebook --port 8889</code></td></tr>
+        <tr><td class="k">import numpy/pandas ไม่ผ่าน</td><td class="v">รัน STEP 07 อีกครั้งขณะ (venv) active อยู่</td></tr>
         <tr><td class="k">ติดตั้งไลบรารีเพิ่ม</td><td class="v"><code>pip install ชื่อไลบรารี</code></td></tr>
       </table>
     </div>
 
-    <!-- SUMMARY -->
-    <div class="step" id="s12">
+    <div class="step" id="s13">
       <div class="step-head"><span class="step-num">QUICK REF</span><h2>สรุปคำสั่งทั้งหมด</h2></div>
       <div class="code">
         <div class="head"><span>powershell</span><button class="copy-btn" onclick="copyCode(this)">คัดลอกทั้งหมด</button></div>
@@ -387,6 +444,7 @@ cd jupyter-project
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 pip install notebook
+pip install numpy matplotlib pandas ipykernel
 jupyter notebook
 deactivate</pre>
       </div>
