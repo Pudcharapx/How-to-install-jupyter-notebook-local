@@ -206,6 +206,31 @@
     max-width:680px; padding-top:36px; margin-top:36px; border-top:1px solid var(--line);
     color:var(--ink-dim); font-size:13px;
   }
+
+  .floating-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--accent2, #5aa9e6);
+    color: #fff;
+    padding: 14px 28px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    box-shadow: 0 10px 20px rgba(90, 169, 230, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    z-index: 1000;
+  }
+  .floating-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 25px rgba(90, 169, 230, 0.4);
+    background: #6ab5f0;
+    color: #fff;
+  }
 </style>
 </head>
 <body>
@@ -239,7 +264,6 @@
       <a href="#e1"><span class="n">01</span> ดาวน์โหลดไฟล์</a>
       <a href="#e2"><span class="n">02</span> แตกไฟล์ ZIP</a>
       <a href="#e3"><span class="n">03</span> เปิดใน Jupyter Notebook</a>
-      <a href="#e4" onclick="window.location.href='exam_guide.html'; return false;"><span class="n">04</span> แนวข้อสอบและการเขียนโค้ด (เปิดหน้าใหม่)</a>
     </nav>
   </aside>
 
@@ -541,6 +565,10 @@ function copyCode(btn){
   });
 }
 </script>
+
+<a href="exam_guide.html" class="floating-btn">
+  📖 ดูแนวข้อสอบและการเขียนโค้ด
+</a>
 
 </body>
 </html>
