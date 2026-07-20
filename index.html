@@ -236,11 +236,9 @@
 
       <div class="nav-divider">ส่วนที่ 2 · วันสอบ</div>
 
-      <a href="#e1"><span class="n">01</span> เตรียมไฟล์ข้อมูล</a>
-      <a href="#e2"><span class="n">02</span> รวมเป็นไฟล์ ZIP</a>
-      <a href="#e3"><span class="n">03</span> อัปโหลดล่วงหน้า</a>
-      <a href="#e4"><span class="n">04</span> แจกไฟล์ตอนสอบ</a>
-      <a href="#e5"><span class="n">05</span> ขั้นตอนของนักเรียน</a>
+      <a href="#e1"><span class="n">01</span> ดาวน์โหลดไฟล์</a>
+      <a href="#e2"><span class="n">02</span> แตกไฟล์ ZIP</a>
+      <a href="#e3"><span class="n">03</span> อัปโหลดเข้า Colab</a>
     </nav>
   </aside>
 
@@ -471,79 +469,42 @@ deactivate</pre>
       </footer>
     </div>
 
-    <!-- ================= SECTION 2: EXAM DAY ================= -->
+    <!-- ================= SECTION 2: EXAM DAY (STUDENT VIEW) ================= -->
     <section class="hero" style="margin-top:96px; padding-top:56px; border-top:1px solid var(--line);">
       <span class="eyebrow" style="color:var(--accent2); border-color:var(--accent2-dim); background:rgba(90,169,230,.08);">● ส่วนที่ 2 · วันสอบ</span>
-      <h1>เตรียมและแจกไฟล์<br><span style="color:var(--accent2);">ข้อมูลสอบ</span> เป็น ZIP</h1>
-      <p class="lead">ขั้นตอนสำหรับผู้คุมสอบ: รวมไฟล์ข้อมูล 2 ชุดเป็น ZIP เดียว อัปโหลดรอไว้ล่วงหน้า
-      แล้วให้นักเรียนแตกไฟล์เองตอนเริ่มสอบ</p>
+      <h1>รับไฟล์ข้อมูลสอบ<br><span style="color:var(--accent2);">แล้วเริ่มทำข้อสอบ</span></h1>
+      <p class="lead">ขั้นตอนสำหรับนักเรียน: ดาวน์โหลดไฟล์ ZIP ที่อาจารย์แจก แตกไฟล์ แล้วอัปโหลดเข้า Colab เพื่อเริ่มทำข้อสอบ</p>
     </section>
 
     <div class="step" id="e1">
-      <div class="step-head"><span class="step-num exam">EXAM 01</span><h2>เตรียมไฟล์ข้อมูล 2 ไฟล์</h2></div>
-      <p>เตรียมไฟล์ตามสเปกข้อสอบ ให้คอลัมน์ตรงกับที่โจทย์กำหนด:</p>
-      <ul class="plain">
-        <li><b>RegistrationName.xlsx</b> — ข้อมูลทะเบียนนักเรียน (SID, Name, Email, Section)</li>
-        <li><b>StudentScores.xlsx</b> — ชีท Homework: <code>HW1_10, HW2_5, HW3_15, HW4_10, Quiz1_10, Quiz2_10, MT_25, FN_25</code></li>
-      </ul>
-      <div class="note exam">
-        <span>💡</span>
-        <span><b>เคล็ดลับ:</b> ใส่แถวข้อมูลซ้ำซ้อนและค่าว่าง (missing value) ไว้ในไฟล์โดยตั้งใจ
-        เพื่อให้ข้อสอบข้อ 2 และ 3 (ตรวจสอบ/ลบข้อมูลซ้ำ, เติมค่า missing) ทำได้จริง</span>
-      </div>
+      <div class="step-head"><span class="step-num exam">EXAM 01</span><h2>ดาวน์โหลดไฟล์ข้อมูล</h2></div>
+      <p>ดาวน์โหลดไฟล์ <code>Exam_Data.zip</code> จากลิงก์ที่อาจารย์แจกในห้องสอบ
+      (Google Classroom หรือ Google Drive)</p>
     </div>
 
     <div class="step" id="e2">
-      <div class="step-head"><span class="step-num exam">EXAM 02</span><h2>รวมเป็นไฟล์ ZIP เดียว</h2></div>
-      <p>เลือกทั้ง 2 ไฟล์พร้อมกัน แล้วบีบอัดรวมกัน มีได้ 2 วิธี:</p>
-
-      <p><strong>วิธีที่ 1 — คลิกขวาบน Windows</strong></p>
+      <div class="step-head"><span class="step-num exam">EXAM 02</span><h2>แตกไฟล์ ZIP</h2></div>
       <ul class="plain">
-        <li>เลือกไฟล์ทั้งสอง (กด <kbd>Ctrl</kbd> ค้างแล้วคลิกเลือก)</li>
-        <li>คลิกขวา → <b>Send to → Compressed (zipped) folder</b></li>
-        <li>ตั้งชื่อ เช่น <code>Exam_Data.zip</code></li>
+        <li>คลิกขวาที่ไฟล์ <code>Exam_Data.zip</code> → เลือก <b>Extract All</b></li>
+        <li>หรือดับเบิลคลิกถ้าเครื่องมี 7-Zip / WinRAR ติดตั้งอยู่</li>
+        <li>จะได้ไฟล์ <code>RegistrationName.xlsx</code> และ <code>StudentScores.xlsx</code> แยกออกมา</li>
       </ul>
-
-      <p><strong>วิธีที่ 2 — ผ่าน PowerShell</strong></p>
-      <div class="code">
-        <div class="head"><span>powershell</span><button class="copy-btn" onclick="copyCode(this)">คัดลอก</button></div>
-        <pre>Compress-Archive -Path RegistrationName.xlsx, StudentScores.xlsx -DestinationPath Exam_Data.zip</pre>
-      </div>
     </div>
 
     <div class="step" id="e3">
-      <div class="step-head"><span class="step-num exam">EXAM 03</span><h2>อัปโหลดล่วงหน้า (แต่ยังไม่เปิดให้เห็น)</h2></div>
-      <p>อัป <code>Exam_Data.zip</code> ขึ้นที่เก็บไฟล์ก่อนถึงเวลาสอบ เลือกวิธีใดวิธีหนึ่ง:</p>
+      <div class="step-head"><span class="step-num exam">EXAM 03</span><h2>อัปโหลดเข้า Colab แล้วเริ่มทำข้อสอบ</h2></div>
       <ul class="plain">
-        <li><b>Google Classroom:</b> สร้าง Assignment แนบไฟล์ ZIP แล้วตั้ง <b>Schedule</b> ให้โพสต์ตรงเวลาสอบพอดี ไม่ต้องมาคอยกดตอนสอบ</li>
-        <li><b>Google Drive:</b> อัปโหลดและแชร์ลิงก์ไว้ล่วงหน้าแบบ "จำกัดสิทธิ์เฉพาะฉัน" แล้วค่อยเปลี่ยนเป็น "ทุกคนที่มีลิงก์" ตอนเริ่มสอบ</li>
+        <li>เปิด Google Colab แล้วกดปุ่ม 📁 <b>Files</b> ทางด้านซ้าย</li>
+        <li>กด <b>Upload</b> แล้วเลือกไฟล์ทั้งสองที่แตกไว้</li>
+        <li>เริ่มเขียนคำสั่งอ่านไฟล์และทำข้อสอบตามโจทย์ได้เลย</li>
       </ul>
-    </div>
-
-    <div class="step" id="e4">
-      <div class="step-head"><span class="step-num exam">EXAM 04</span><h2>แจกไฟล์ตอนเริ่มสอบ</h2></div>
-      <ul class="plain">
-        <li>ถึงเวลาสอบ กดเปิดสิทธิ์การเข้าถึงไฟล์ (หรือปล่อยให้ Classroom โพสต์ตามเวลาที่ตั้งไว้)</li>
-        <li>แปะลิงก์ดาวน์โหลดในห้องสอบ/หน้าข้อสอบ</li>
-        <li>ประกาศให้นักเรียนดาวน์โหลดและแตกไฟล์ได้ทันที</li>
-      </ul>
-    </div>
-
-    <div class="step" id="e5">
-      <div class="step-head"><span class="step-num exam">EXAM 05</span><h2>ขั้นตอนของนักเรียน (แจ้งในห้องสอบ)</h2></div>
-      <ol class="plain" style="padding-left:20px;">
-        <li>ดาวน์โหลด <code>Exam_Data.zip</code> จาก Classroom / Drive</li>
-        <li>คลิกขวาที่ไฟล์ → <b>Extract All</b> (หรือดับเบิลคลิกถ้ามี 7-Zip/WinRAR)</li>
-        <li>จะได้ไฟล์ <code>RegistrationName.xlsx</code> และ <code>StudentScores.xlsx</code> แยกออกมา</li>
-        <li>อัปโหลดทั้ง 2 ไฟล์เข้า Colab (ปุ่ม 📁 Files → Upload) แล้วเริ่มทำข้อสอบได้เลย</li>
-      </ol>
       <div class="note exam">
         <span>📌</span>
         <span><b>อย่าลืมย้ำ:</b> คำตอบทุกข้อต้องพร้อมเลขข้อกำกับในไฟล์ Colab และต้องแชร์ไฟล์ Colab ให้อาจารย์ด้วย</span>
       </div>
 
       <footer>
-        ส่วนนี้ใช้สำหรับเตรียมและแจกไฟล์ข้อมูลในวันสอบเท่านั้น แยกจากขั้นตอนติดตั้ง Jupyter ด้านบน
+        ส่วนนี้สำหรับนักเรียนใช้ตอนวันสอบ แยกจากขั้นตอนติดตั้ง Jupyter ด้านบน
       </footer>
     </div>
 
